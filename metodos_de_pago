@@ -1,0 +1,36 @@
+class MetodosDePago:
+    def __init__(self, pse, nequi, tarjetas, efectivo):
+        self.pse = pse
+        self.nequi = nequi
+        self.tarjetas = tarjetas
+        self.efectivo = efectivo
+
+    def cantidad(self):
+        monto =  input("¿Cuánto es el monto que vas a pagar?: ")
+        return monto
+    
+    def eleccion(self):
+        metodo = input("¿Qué medio de pago vas a usar? (nequi, pse, tarjetas, efectivo): ").strip().lower()
+        if metodo in ['nequi', 'pse', 'tarjetas', 'efectivo']:
+            print(f"Has elegido pagar con {metodo}")
+            return metodo
+        else:
+            print("Método de pago no válido, intenta de nuevo.")
+            return self.eleccion()
+
+
+class Eleccion:
+    def __init__(self):
+        self.metodo_pago = MetodosDePago(True, True, True, True)
+    
+    def menu(self):
+        opcion = input("¿Continuar con el pago? (si/no): ").strip().lower()
+        if opcion == "si":
+            monto = self.metodo_pago.cantidad()
+            metodo = self.metodo_pago.eleccion()
+            print(f"Pago de $ {monto} realizado con {metodo}.")
+        else:
+            print("Pago cancelado.")
+
+producir= Eleccion()
+producir.menu()

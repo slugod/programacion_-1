@@ -1,0 +1,151 @@
+import time
+
+class Empleado:
+    def __init__(self, salario, dias):
+        self.__salario = salario
+        self.__dias = dias
+
+    def pago(self):
+        try:
+            diario = float(input("Ingresa tu pago diario: "))
+            time.sleep(1)
+
+            laborar = int(input("Ingresa cuántos días trabajaste en el mes: "))
+            time.sleep(1)
+
+            total_pago = diario * laborar
+            pago_formateado = f"${total_pago:,.0f}".replace(",", ".")  # Formato estilo COP
+            print()
+            print(f"El pago total es: {pago_formateado}")
+            return total_pago
+        except ValueError:
+            print("Error: Ingresa valores numéricos válidos.")
+
+
+class Estudiante:
+    def __init__(self, nombre, notas):
+        self.__nombre = nombre 
+        self.__notas = notas
+        self.__promedio = 0
+
+    def alumno(self):
+        try:
+            self.__nombre = input("Ingresa el nombre del alumno: ")
+        except ValueError:
+            print("Error, no debes ingresar caracteres especiales.")
+
+    def calcular(self):
+        try:
+            cantidad = int(input("¿Cuántas notas quieres ingresar?: "))
+            self.__notas = []
+
+            for i in range(cantidad):
+                nota = float(input(f"Ingrese la nota {i + 1}: "))
+                self.__notas.append(nota)
+
+            self.__promedio = sum(self.__notas) / len(self.__notas)
+            print()
+            print(f"El promedio del estudiante {self.__nombre} es: {self.__promedio}")
+            return self.__promedio
+        except ValueError:
+            print("---Error: Ingresa solo números.---")
+
+
+class Factura:
+    def __init__(self):
+        self.__productos = []
+
+    def agregar_producto(self):
+        try:
+            nombre = input("Ingrese el nombre del producto: ")
+            precio = float(input("Ingrese el precio del producto: "))
+            cantidad = int(input("Ingrese la cantidad del producto: "))
+            self.__productos.append({"nombre": nombre, "precio": precio, "cantidad": cantidad})
+        except ValueError:
+            print("---Error: Ingresa valores numéricos válidos.---")
+
+    def calcular_total(self):
+        return sum(p["precio"] * p["cantidad"] for p in self.__productos)
+
+    def mostrar_factura(self):
+        print("Factura:")
+        for p in self.__productos:
+            total = p["cantidad"] * p["precio"]
+            total_formateado = f"${total:,.0f}".replace(",", ".")
+            precio_formateado = f"${p['precio']:,.0f}".replace(",", ".")
+            print(f"{p['nombre']} - {p['cantidad']} x {precio_formateado} = {total_formateado}")
+
+        print()
+        total_general = f"${self.calcular_total():,.0f}".replace(",", ".")
+        print(f"Total: {total_general}")
+
+
+class Usuario:
+    def __init__(self, nombre, contrasena):
+        self.__nombre = nombre
+        self.__contrasena = contrasena  
+
+    def autenticar(self, nombre, contrasena):
+        return self.__nombre == nombre and self.__contrasena == contrasena
+
+    def cambiar_contrasena(self, nueva_contrasena):
+        self.__contrasena = nueva_contrasena
+        print("Contraseña actualizada correctamente.")
+
+    def mostrar_usuario(self):
+        print()
+        print(f"Usuario: {self.__nombre}")
+
+    def get_nombre(self):
+        return self.__nombre
+
+
+# Registro de usuario
+nombre_usuario = input("Ingrese su nombre de usuario: ")
+contrasena_usuario = input("Ingrese su contraseña: ")
+usuario = Usuario(nombre_usuario, contrasena_usuario)
+print("Usuario registrado con éxito.")
+
+
+def menu():
+    while True:
+        print ("---------------------------------------------------------")
+        print("\nMenú Principal\n")
+        print("1. Calcular pago de empleado")
+        print("2. Calcular promedio de estudiante")
+        print("3. Gestionar factura")
+        print("4. Gestionar usuario")
+        print("5. Salir")
+        time.sleep(2)
+        print ("\n" \
+        "---------------------------------------------------------------")
+        opcion = input("Selecciona una opción: ")
+
+        if opcion == "1":
+            empleado = Empleado(0, 0)
+            empleado.pago()
+        elif opcion == "2":
+            estudiante = Estudiante("", [])
+            estudiante.alumno()
+            estudiante.calcular()
+        elif opcion == "3":
+            factura = Factura()
+            while True:
+                factura.agregar_producto()
+                continuar = input("¿Desea agregar otro producto? (si/no): ").strip().lower()
+                if continuar == "no":
+                    break
+            factura.mostrar_factura()
+        elif opcion == "4":
+            usuario.mostrar_usuario()
+            nueva_contrasena = input("Ingrese una nueva contraseña: ")
+            usuario.cambiar_contrasena(nueva_contrasena)
+        elif opcion == "5":
+            time.sleep(1)
+            print(f"Vuelve pronto, sr. {usuario.get_nombre()}")
+            print("---Hasta una próxima.---")
+            break
+        else:
+            print("Opción no válida, intenta de nuevo.")
+
+menu()

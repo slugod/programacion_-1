@@ -1,0 +1,194 @@
+import time 
+
+
+class CuentaBancaria:
+    def __init__(self, saldo_inicial):
+        self.__saldo = saldo_inicial
+
+    def get_saldo(self):
+        return self.__saldo
+
+    def set_saldo(self, nuevo_saldo):
+        if nuevo_saldo >= 1000000:
+            
+            self.__saldo = nuevo_saldo
+        else:
+            print("No tiene saldo suficiente para establecer ese valor.")
+
+    def depositar(self, monto):
+        if monto > 10000:
+            self.__saldo += monto
+        else:
+            print("El monto es inválido.")
+
+    def retirar(self, monto):
+        if monto <= self.__saldo:
+            self.__saldo -= monto
+        else:
+            print("No tiene fondos suficientes.")
+
+
+class Estudiante:
+    def __init__(self, nota_alumno):
+        self.__nota = nota_alumno
+
+    def get_nota(self):
+        return self.__nota
+
+    def get_calificacion(self):
+        alumno = input (" Ingresa el nombre del estudiante : ")
+        try:
+            nota = float(input("¿Cuál es la nota del estudiante?: "))
+            self.__nota = nota  # actualizar la nota interna
+
+            if nota < 3:
+                print(f"La nota del estudiante {alumno} es demasiado baja.")
+            elif 3 <= nota <= 4:
+                print(f"La nota del estudiante {alumno} es regular.")
+            elif 4.1 <= nota <= 5:
+                print(f"La nota del estudiante {alumno} es excelente.")
+            else:
+                print("Nota fuera de rango.")
+        except ValueError:
+            print("Por favor, ingrese un número válido.")
+
+class Persona :
+
+    def __init__ ( self, nombre , edad):
+        self.__edad= edad
+        self.__name= nombre 
+    def get_edad (self):
+        return self.__edad
+    def get_name (self):
+        return self.__name 
+    def get_datos ( self ):
+        nombre = input ("Ingresa el nombre de la persona :").strip()
+        self.__name=nombre 
+        try:
+            edad = int ( input(f" Ingresa la edad de {nombre }. : "))
+            self.__edad= edad
+
+            print (f" {nombre}, tiene una edad de {edad} años.")
+        except ValueError:
+            print (" Porfavor ingesa una edad valida ")
+
+class Paciente:
+    def __init__(self, nombre, edad, historial):
+        self.__nombre = nombre
+        self.__edad = edad
+        self.__historial = historial
+
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_mostrar_historial(self):
+        print(f"\nPaciente: {self.__nombre}")
+        print(f"Edad: {self.__edad}")
+        print("Historial médico:")
+        for d in self.__historial:
+            print(f"- {d}")
+
+
+
+
+
+# Instancias de las clases 
+
+cuenta = CuentaBancaria(1000000)
+nota = Estudiante(5)
+persona= Persona ("X", 2)
+pacientes = [
+    Paciente("Laura", 28, ["Resfriado", "Dolor de estómago"]),
+    Paciente("Pedro", 35, ["Migraña"]),
+]
+
+
+def menu():
+    while True:
+        print("-------Bienvenido al menú-------")
+        print("1. Ingresar al banco.")
+        print("2. Ver nota de estudiante")
+        print("3. Datos de la persona")
+        print("4. Ver historial médico")
+        print("5. Salir del menú")
+        opcion = input("¿Qué quieres hacer?: ").lower()
+
+        if opcion == "1":
+      
+            while True:
+                print("-------------------------------------------------")
+                print("     Bienvenido al banco Avenida De Lugo ")
+                print("1. Ver saldo")
+                print("2. Agregar saldo")
+                print("3. Retirar")
+                print("4. Salir del banco")
+                print("-------------------------------------------------")
+                opc = input("¿Qué quieres hacer en el banco?: ")
+
+                if opc == "1":
+                    print("Saldo actual:", cuenta.get_saldo())
+                    input("Presiona Enter para continuar...")
+                    time.sleep(1)
+
+                elif opc == "2":
+                    cuenta.depositar(50000)
+                    print("Después del depósito:", cuenta.get_saldo())
+                    input("Presiona Enter para continuar...")
+                    time.sleep(1)
+
+                elif opc == "3":
+                    cuenta.retirar(500000)
+                    print("Después del retiro:", cuenta.get_saldo())
+                    input("Presiona Enter para continuar...")
+
+                elif opc == "4":
+                    print("-------------------------------------------------")
+                    print("Gracias por visitarnos, vuelve pronto")
+                    print(r"""
+╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
+┃  💰 Banco Avenida De Lugo 💰     ┃
+┃                                    ┃
+┃  Gracias por confiar en nosotros   ┃
+┃     ¡Vuelve pronto! 😊             ┃
+┃                                    ┃
+┃   ╭───────────────╮                ┃
+┃   │   🏦  🏦  🏦   │                ┃
+┃   │   👨‍💼 👩‍💼 👨‍💼   │                ┃
+┃   ╰───────────────╯                ┃
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
+""") ## este print fue creado por inteligencia 
+                    input("Presiona Enter para regresar al menú principal...")
+                    time.sleep(2)
+                    break
+
+                else:
+                    print("Opción no válida.")
+                    input("Presiona Enter para continuar...")
+            
+        elif opcion == "2":
+            print("-------------------------------------------------")
+            nota.get_calificacion()
+            print()
+
+        elif opcion == "3":
+            persona.get_datos()
+            print()
+
+        elif opcion == "4":
+            print("\nPacientes:")
+            for i, p in enumerate(pacientes, 1):
+                print(f"{i}. {p.get_nombre()}")
+            num = int(input("Selecciona un número: "))
+            if 1 <= num <= len(pacientes):
+                pacientes[num - 1].get_mostrar_historial()
+
+        elif opcion == "5":
+            print("¡Gracias por usar el sistema! Hasta luego.")
+            break  
+        else:
+            print("-------------------------------------------------")
+            print("Has ingresado una opción no válida. Intentemos de nuevo.")
+
+
+
+menu()

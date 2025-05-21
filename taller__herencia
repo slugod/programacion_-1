@@ -1,0 +1,130 @@
+
+class Persona:
+    def __init__(self, nombre, edad):
+        self.nombre = nombre
+        self.edad = edad
+
+    def presentarse(self):
+        print(f"Hola, soy {self.nombre} y tengo {self.edad} años.")
+
+class Estudiante(Persona):
+    def __init__(self, nombre, edad, carrera):
+        super().__init__(nombre, edad)
+        self.carrera = carrera
+
+    def presentarse(self):
+        super().presentarse()
+        print(f"Estudio la carrera de {self.carrera}.")
+
+
+class Animal:
+    def hacer_sonido(self):
+        print("Sonido genérico de animal.")
+
+class Perro(Animal):
+    def hacer_sonido(self):
+        print("Guau")
+
+class Gato(Animal):
+    def hacer_sonido(self):
+        print("Miau")
+
+class Vehiculo:
+    def __init__(self, marca, modelo):
+        self.marca = marca
+        self.modelo = modelo
+
+class Carro(Vehiculo):
+    def __init__(self, marca, modelo, numero_de_puertas):
+        super().__init__(marca, modelo)
+        self.numero_de_puertas = numero_de_puertas
+
+class Moto(Vehiculo):
+    def __init__(self, marca, modelo, tipo_de_motor):
+        super().__init__(marca, modelo)
+        self.tipo_de_motor = tipo_de_motor
+
+class Empleado:
+    def trabajar(self):
+        print("Estoy trabajando.")
+
+class Deportista:
+    def entrenar(self):
+        print("Estoy entrenando.")
+
+class EmpleadoDeportista(Persona, Empleado, Deportista):
+    def __init__(self, nombre):
+        Persona.__init__(self, nombre)
+
+
+class Producto:
+    def __init__(self, nombre, precio):
+        self.nombre = nombre
+        self.precio = precio
+
+class ProductoPerecedero(Producto):
+    def __init__(self, nombre, precio, fecha_vencimiento):
+        super().__init__(nombre, precio)
+        self.fecha_vencimiento = fecha_vencimiento
+
+## Creacion del menu
+
+def menu():
+    while True:
+        print("\n===== MENÚ PRINCIPAL =====")
+        print("1. Persona y Estudiante")
+        print("2. Animal, Perro y Gato")
+        print("3. Vehículos")
+        print("4. Herencia múltiple")
+        print("5. Producto y Producto Perecedero")
+        print("0. Salir")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            nombre = input("Nombre: ")
+            edad = int(input("Edad: "))
+            carrera = input("Carrera: ")
+            estudiante = Estudiante(nombre, edad, carrera)
+            estudiante.presentarse()
+
+        elif opcion == "2":
+            print("\n--- Sonidos de animales ---")
+            Animal().hacer_sonido()
+            Perro().hacer_sonido()
+            Gato().hacer_sonido()
+
+        elif opcion == "3":
+            print("\n--- Vehículos ---")
+            carro = Carro("Toyota", "Yaris", 4)
+            moto = Moto("Kawasaki", "Ninja", "4 tiempos")
+            print(f"Carro: {carro.marca}, {carro.modelo}, {carro.numero_de_puertas} puertas")
+            print(f"Moto: {moto.marca}, {moto.modelo}, motor {moto.tipo_de_motor}")
+
+        elif opcion == "4":
+            print("\n--- Empleado Deportista ---")
+            nombre = input("Nombre: ")
+            emp_dep = EmpleadoDeportista(nombre)
+            print(f"Nombre: {emp_dep.nombre}")
+            emp_dep.trabajar()
+            emp_dep.entrenar()
+            print("Orden MRO:", EmpleadoDeportista.__mro__)
+
+        elif opcion == "5":
+            print("\n--- Producto Perecedero ---")
+            nombre = input("Nombre del producto: ")
+            precio = float(input("Precio: "))
+            vencimiento = input("Fecha de vencimiento (YYYY-MM-DD): ")
+            prod = ProductoPerecedero(nombre, precio, vencimiento)
+            print(f"Producto: {prod.nombre}, Precio: {prod.precio}, Vence: {prod.fecha_vencimiento}")
+
+        elif opcion == "0":
+            print("¡Hasta luego!")
+            break
+
+        else:
+            print("Opción inválida. Intente de nuevo.")
+
+# Ejecutar menú
+if __name__ == "__main__":
+    menu()

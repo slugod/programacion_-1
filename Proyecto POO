@@ -1,0 +1,160 @@
+from datetime import datetime
+
+# Clase base
+class Vehiculo:
+    def __init__(self, placa, marca="Desconocida"):
+        self._placa = placa
+        self._marca = marca
+
+    def get_placa(self):
+        return self._placa
+
+    def calcular_tarifa(self, horas):
+        raise NotImplementedError("Debe implementarse en una subclase.")
+
+# Subclases numero 1
+class Carro(Vehiculo):
+    def calcular_tarifa(self, horas):
+        return 20.000 * horas
+
+class Moto(Vehiculo):
+    def calcular_tarifa(self, horas):
+        return 50.000 * horas
+
+# Espacio de parqueo, actualizar cuando entra un vehiculo y ocupa un espacio
+class EspacioParqueo:
+    def __init__(self, numero):
+        self._numero = numero
+        self._ocupado = False
+        self._vehiculo = None
+        self._hora_entrada = None
+
+    def ocupar(self, vehiculo):
+        if not self._ocupado:
+            self._vehiculo = vehiculo
+            self._hora_entrada = datetime.now()
+            self._ocupado = True
+            return True
+        return False
+
+    def liberar(self):
+        if self._ocupado:
+            hora_salida = datetime.now()
+            tiempo = hora_salida - self._hora_entrada
+            horas = max(1, int(tiempo.total_seconds() // 3600))
+            tarifa = self._vehiculo.calcular_tarifa(horas)
+            placa = self._vehiculo.get_placa()
+
+            # Reiniciar estado al estado natural al momento que se retira un vehiculo...
+            self._vehiculo = None
+            self._ocupado = False
+            self._hora_entrada = None
+
+            return (placa, horas, tarifa)
+        return None
+
+    def esta_ocupado(self):
+        return self._ocupado
+
+    def get_numero(self):
+        return self._numero
+
+# Mostramos la clase del empleado y el trabajo que el hace...
+class Empleado:
+    def __init__(self, nombre):
+        self._nombre = nombre
+
+    def registrar_entrada(self, vehiculo, espacio):
+        if espacio.ocupar(vehiculo):
+            print(f"[Entrada] Vehículo {vehiculo.get_placa()} parqueado en espacio {espacio.get_numero()} por {self._nombre}.")
+        else:
+            print("¡Espacio ya ocupado!")
+
+    def registrar_salida(self, espacio):
+        resultado = espacio.liberar()
+        if resultado:
+            placa, horas, tarifa = resultado
+            print(f"[Salida] Vehículo {placa} salió tras {horas} hora(s). Total a pagar: ${tarifa}.")
+        else:
+            print("Ese espacio está vacío.")
+
+# Parqueadero general, se verifica cuando esta disponible oh no un espacio 
+class Parqueadero:
+    def __init__(self, capacidad):
+        self._espacios = [EspacioParqueo(i + 1) for i in range(capacidad)]
+
+    def buscar_espacio_libre(self):
+        for espacio in self._espacios:
+            if not espacio.esta_ocupado():
+                return espacio
+        return None
+
+    def listar_espacios(self):
+        print("\nEstado de espacios:")
+        for espacio in self._espacios:
+            estado = "Ocupado" if espacio.esta_ocupado() else "Libre"
+            print(f"  Espacio {espacio.get_numero()}: {estado}")
+
+    def get_espacio_por_numero(self, numero):
+        for espacio in self._espacios:
+            if espacio.get_numero() == numero:
+                return espacio
+        return None
+
+# creamos el menu interactivo
+def menu():
+    parqueadero = Parqueadero(capacidad=5)
+    empleado = Empleado("LUGO")
+
+    while True:
+        print("\n=== **Sistema de Parqueadero SLUGOD** ===")
+        print("1. Ingresar vehículo")
+        print("2. Retirar vehículo")
+        print("3. Ver espacios")
+        print("4. Salir")
+        opcion = input("Selecciona una opción: ")
+
+        if opcion == "1":
+            placa = input("Ingrese la placa del vehículo: ").upper()
+            tipo = input("Tipo de vehículo (carro/moto): ").lower()
+
+            if tipo == "carro":
+                vehiculo = Carro(placa)
+            elif tipo == "moto":
+                vehiculo = Moto(placa)
+            else:
+                print("Tipo de vehículo no válido.")
+                continue
+
+            espacio = parqueadero.buscar_espacio_libre()
+            if espacio:
+                empleado.registrar_entrada(vehiculo, espacio)
+            else:
+                print("No hay espacios disponibles.")
+
+        elif opcion == "2":
+            parqueadero.listar_espacios()
+            try:
+                num = int(input("Ingrese número de espacio a liberar: "))
+                espacio = parqueadero.get_espacio_por_numero(num)
+                if espacio:
+                    empleado.registrar_salida(espacio)
+                else:
+                    print("Número de espacio inválido.")
+            except ValueError:
+                print("Entrada no válida.")
+
+        elif opcion == "3":
+            parqueadero.listar_espacios()
+
+        elif opcion == "4":
+            print("Saliendo del sistema.\nGracias pot usar nuestro SPI!")
+            break
+
+        else:
+            print("Opción inválida. Intenta de nuevo.")
+
+# Ejecutar
+if __name__ == "__main__":
+    menu()
+
